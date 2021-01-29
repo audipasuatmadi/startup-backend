@@ -12,6 +12,6 @@ export interface ImproperInputResponse {
 }
 
 export interface RegisterValidationFailed {
-  isImproperInput: boolean,
-  improperInputDetails: ImproperInputResponse
+  isImproperInput: boolean;
+  improperInputDetails: ImproperInputResponse;
 }

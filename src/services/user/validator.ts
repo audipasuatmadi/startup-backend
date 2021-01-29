@@ -32,9 +32,9 @@ export const validateUserRegisterBody = async (
       { abortEarly: false, convert: false }
     );
     const validateDecision = validateResult as RegisterRequestBody;
-    return validateDecision
+    return validateDecision;
   } catch (e) {
     const validateDecision = e as ValidationError;
-    return validateDecision
+    return validateDecision;
   }
 };
