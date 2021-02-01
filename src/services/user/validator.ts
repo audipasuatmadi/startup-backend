@@ -8,7 +8,7 @@ const baseValidationMessage = {
 };
 
 const userRegisterBodySchema = Joi.object({
-  name: Joi.string().trim().required().messages(baseValidationMessage),
+  name: Joi.string().trim().required().label('nama').messages(baseValidationMessage),
 
   username: Joi.string()
     .trim()

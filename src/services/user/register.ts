@@ -16,7 +16,7 @@ const registerUser = async (requestBody: RegisterRequestBody) => {
     if ('isJoi' in validationResponse) throw validationResponse;
   } catch (e) {
     const validationError: RegistrationFailedResponse = (e as ValidationError).details
-      .map((errorItem) => ({ [errorItem.context?.key!]: errorItem.type }))
+      .map((errorItem) => ({ [errorItem.context?.key!]: errorItem.message }))
       .reduce(
         (previousVal, currentVal) => ({ ...previousVal, ...currentVal }),
         {}
@@ -34,7 +34,7 @@ const registerUser = async (requestBody: RegisterRequestBody) => {
     }
   } catch (e) {
     const errorFeedback: RegistrationFailedResponse = {
-      username: `username.exists.${e as string}`,
+      username: `username ${e as string} telah dipakai`,
     };
     return returnResponseSchema(403, errorFeedback);
   }
