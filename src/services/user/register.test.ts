@@ -1,6 +1,11 @@
 import * as UserValidator from './validator';
-import { RegisterRequestBody, RegisterValidationFailed } from './usertypes';
+import { RegisterRequestBody, BaseServiceReturnType } from './usertypes';
 import registerUser from './register';
+import User from '../../models/User';
+
+
+
+jest.mock('../../models/User')
 
 describe('user registration service tests', () => {
   const mockedValidateUserRegisterBody = jest.spyOn(
@@ -36,26 +41,30 @@ describe('user registration service tests', () => {
   });
 
   it("should return the right response object if the request doesn't pass validation", async () => {
-    const improperResponse = (await registerUser(
+    const improperResponseCall = (await registerUser(
       dummyImproperUserRegisterRequestBody
-    )) as RegisterValidationFailed;
+    )) as BaseServiceReturnType;
     expect(mockedValidateUserRegisterBody).toHaveBeenCalledTimes(1);
     expect(mockedValidateUserRegisterBody).toHaveBeenCalledWith(
       dummyImproperUserRegisterRequestBody
     );
+
+    const improperResponse = improperResponseCall.payload
 
     expect('isImproperInput' in improperResponse).toBe(true);
     expect('improperInputDetails' in improperResponse).toBe(true);
   });
 
   it("should return the right response value if the request doesn't pass validation", async () => {
-    const improperResponse = (await registerUser(
+    const improperResponseCall = (await registerUser(
       dummyImproperUserRegisterRequestBody
-    )) as RegisterValidationFailed;
+    )) as BaseServiceReturnType;
     expect(mockedValidateUserRegisterBody).toHaveBeenCalledTimes(1);
     expect(mockedValidateUserRegisterBody).toHaveBeenCalledWith(
       dummyImproperUserRegisterRequestBody
     );
+
+    const improperResponse = improperResponseCall.payload
 
     expect('isImproperInput' in improperResponse).toBe(true);
     expect('improperInputDetails' in improperResponse).toBe(true);
