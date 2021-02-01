@@ -4,28 +4,23 @@ export interface RegisterRequestBody {
   password: string;
 }
 
-export interface ImproperInputResponse {
+export interface RegistrationFailedResponse {
   name?: string;
   username?: string;
   password?: string;
   otherMessage?: string;
 }
 
-export interface RegisterValidationFailed {
-  isImproperInput: boolean;
-  improperInputDetails: ImproperInputResponse;
-}
-
-export interface BaseServiceReturnType {
+export interface BaseServiceReturnType<T> {
   status: number;
-  payload: any;
+  payload: T;
 }
 
 export interface UserAttributes extends RegisterRequestBody {
   id: number;
 }
 
-export interface AuthenticationResponsePayload {
+export interface RegistrationSuccessResponse {
   username: string;
   name: string;
   accessToken: string;
@@ -35,4 +30,4 @@ export interface AuthenticationResponsePayload {
 export const returnResponseSchema = (
   status: number,
   payload: any
-): BaseServiceReturnType => ({ status, payload });
+): BaseServiceReturnType<RegistrationSuccessResponse | RegistrationFailedResponse> => ({ status, payload });

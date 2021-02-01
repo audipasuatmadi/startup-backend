@@ -1,8 +1,8 @@
 import {
   RegisterRequestBody,
-  RegisterValidationFailed,
+  RegistrationFailedResponse,
   returnResponseSchema,
-  AuthenticationResponsePayload,
+  RegistrationSuccessResponse,
 } from './usertypes';
 import bcrypt from 'bcrypt';
 import { validateUserRegisterBody } from './validator';
@@ -10,21 +10,17 @@ import { ValidationError } from 'joi';
 import User from '../../models/User';
 import jwt from 'jsonwebtoken';
 
-
 const registerUser = async (requestBody: RegisterRequestBody) => {
   try {
     const validationResponse = await validateUserRegisterBody(requestBody);
     if ('isJoi' in validationResponse) throw validationResponse;
   } catch (e) {
-    const validationError: RegisterValidationFailed = {
-      isImproperInput: true,
-      improperInputDetails: (e as ValidationError).details
-        .map((errorItem) => ({ [errorItem.context?.key!]: errorItem.type }))
-        .reduce(
-          (previousVal, currentVal) => ({ ...previousVal, ...currentVal }),
-          {}
-        ),
-    };
+    const validationError: RegistrationFailedResponse = (e as ValidationError).details
+      .map((errorItem) => ({ [errorItem.context?.key!]: errorItem.type }))
+      .reduce(
+        (previousVal, currentVal) => ({ ...previousVal, ...currentVal }),
+        {}
+      );
 
     return returnResponseSchema(403, validationError);
   }
@@ -37,11 +33,8 @@ const registerUser = async (requestBody: RegisterRequestBody) => {
       throw existingUsername.username;
     }
   } catch (e) {
-    const errorFeedback: RegisterValidationFailed = {
-      isImproperInput: true,
-      improperInputDetails: {
-        username: `username.exists.${e as string}`,
-      },
+    const errorFeedback: RegistrationFailedResponse = {
+      username: `username.exists.${e as string}`,
     };
     return returnResponseSchema(403, errorFeedback);
   }
@@ -58,41 +51,36 @@ const registerUser = async (requestBody: RegisterRequestBody) => {
       username: requestBody.username,
     });
   } catch (e) {
-    const errorFeedback: RegisterValidationFailed = {
-      isImproperInput: true,
-      improperInputDetails: {
-        otherMessage:
-          'Something is wrong with the server, please contact our team. Thank you!',
-      },
+    const errorFeedback: RegistrationFailedResponse = {
+      otherMessage:
+        'Something is wrong with the server, please contact our team. Thank you!',
     };
     return returnResponseSchema(500, errorFeedback);
   }
 
   const publicCredentials = {
     username: requestBody.username,
-    name: requestBody.name
-  }
+    name: requestBody.name,
+  };
 
   try {
-    console.log('whatt')
-    console.log(process.env.REFRESH_TOKEN_SECRET)
-    const refreshToken = jwt.sign(publicCredentials, process.env.REFRESH_TOKEN_SECRET!)
-    console.log('whatt')
-    const accessToken = jwt.sign(publicCredentials, process.env.ACCESS_TOKEN_SECRET!)
-    console.log('whatt')
-
-    const response: AuthenticationResponsePayload = {
+    const refreshToken = jwt.sign(
+      publicCredentials,
+      process.env.REFRESH_TOKEN_SECRET!
+    );
+    const accessToken = jwt.sign(
+      publicCredentials,
+      process.env.ACCESS_TOKEN_SECRET!
+    );
+    const response: RegistrationSuccessResponse = {
       ...publicCredentials,
       accessToken,
-      refreshToken
-    }
-    console.log('whatt')
+      refreshToken,
+    };
     return returnResponseSchema(201, response);
   } catch (e) {
-    return returnResponseSchema(500, 'something is wrong oh noee')
+    return returnResponseSchema(500, 'something is wrong oh noee');
   }
-
-
 };
 
 export default registerUser;

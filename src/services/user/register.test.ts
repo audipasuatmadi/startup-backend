@@ -1,11 +1,13 @@
 import * as UserValidator from './validator';
-import { RegisterRequestBody, BaseServiceReturnType } from './usertypes';
+import {
+  RegisterRequestBody,
+  BaseServiceReturnType,
+  RegistrationFailedResponse,
+  RegistrationSuccessResponse,
+} from './usertypes';
 import registerUser from './register';
-import User from '../../models/User';
 
-
-
-jest.mock('../../models/User')
+jest.mock('../../models/User');
 
 describe('user registration service tests', () => {
   const mockedValidateUserRegisterBody = jest.spyOn(
@@ -43,33 +45,32 @@ describe('user registration service tests', () => {
   it("should return the right response object if the request doesn't pass validation", async () => {
     const improperResponseCall = (await registerUser(
       dummyImproperUserRegisterRequestBody
-    )) as BaseServiceReturnType;
+    )) as BaseServiceReturnType<RegistrationFailedResponse>;
     expect(mockedValidateUserRegisterBody).toHaveBeenCalledTimes(1);
     expect(mockedValidateUserRegisterBody).toHaveBeenCalledWith(
       dummyImproperUserRegisterRequestBody
     );
 
-    const improperResponse = improperResponseCall.payload
+    const improperResponse = improperResponseCall.payload;
 
-    expect('isImproperInput' in improperResponse).toBe(true);
-    expect('improperInputDetails' in improperResponse).toBe(true);
+    expect('name' in improperResponse).toBe(true);
+    expect('password' in improperResponse).toBe(true);
   });
 
   it("should return the right response value if the request doesn't pass validation", async () => {
     const improperResponseCall = (await registerUser(
       dummyImproperUserRegisterRequestBody
-    )) as BaseServiceReturnType;
+    )) as BaseServiceReturnType<RegistrationSuccessResponse>;
     expect(mockedValidateUserRegisterBody).toHaveBeenCalledTimes(1);
     expect(mockedValidateUserRegisterBody).toHaveBeenCalledWith(
       dummyImproperUserRegisterRequestBody
     );
 
-    const improperResponse = improperResponseCall.payload
+    const improperResponse = improperResponseCall.payload;
 
-    expect('isImproperInput' in improperResponse).toBe(true);
-    expect('improperInputDetails' in improperResponse).toBe(true);
+    expect('name' in improperResponse).toBe(true);
+    expect('password' in improperResponse).toBe(true);
 
-    expect(improperResponse.isImproperInput).toBe(true);
-    expect(improperResponse.improperInputDetails.name).toMatch('string.empty');
+    expect(improperResponse.name).toMatch('string.empty');
   });
 });

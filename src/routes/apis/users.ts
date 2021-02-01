@@ -6,7 +6,7 @@ const router = express.Router()
 router.post('/', async (req, res) => {
   const requestBody = req.body as RegisterRequestBody
   const result = await registerUser(requestBody)
-  res.json(result)
+  res.status(result.status).json(result.payload)
 })
 
 export default router
