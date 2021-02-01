@@ -4,8 +4,8 @@
   "description": "using monolithic architecture, migration to microservices is possible",
   "main": "src/app.ts",
   "scripts": {
-    "start": "node dist/app.js",
-    "dev": "nodemon src/app.ts",
+    "start": "node dist/server.js",
+    "dev": "nodemon src/server.ts",
     "build": "tsc -p .",
     "test": "jest",
     "test:watch": "jest --watch"
@@ -13,10 +13,19 @@
   "author": "Putu Audi Pasuatmadi",
   "license": "ISC",
   "dependencies": {
+    "@types/bcrypt": "^3.0.0",
+    "@types/cors": "^2.8.9",
+    "@types/jsonwebtoken": "^8.5.0",
     "@types/supertest": "^2.0.10",
+    "bcrypt": "^5.0.0",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "joi": "^17.3.0",
     "jsonwebtoken": "^8.5.1",
+    "mysql": "^2.18.1",
+    "mysql2": "^2.2.5",
     "sequelize": "^6.4.0"
   },
   "devDependencies": {
