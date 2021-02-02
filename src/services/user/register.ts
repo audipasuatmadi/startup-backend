@@ -3,12 +3,13 @@ import {
   RegistrationFailedResponse,
   returnResponseSchema,
   RegistrationSuccessResponse,
+  UserInstance,
 } from './usertypes';
 import bcrypt from 'bcrypt';
 import { validateUserRegisterBody } from './validator';
 import { ValidationError } from 'joi';
-import User from '../../models/User';
-import jwt from 'jsonwebtoken';
+import TokensService from '../tokens'
+import UserRepository from '../../repositories/UserRepository';
 
 const registerUser = async (requestBody: RegisterRequestBody) => {
   try {
@@ -26,9 +27,9 @@ const registerUser = async (requestBody: RegisterRequestBody) => {
   }
 
   try {
-    const existingUsername = await User.findOne({
-      where: { username: requestBody.username },
-    });
+    const existingUsername = await UserRepository.getUserByUsername(
+      requestBody.username
+    );
     if (existingUsername !== null) {
       throw existingUsername.username;
     }
@@ -39,13 +40,15 @@ const registerUser = async (requestBody: RegisterRequestBody) => {
     return returnResponseSchema(403, errorFeedback);
   }
 
+  let user: UserInstance
+
   try {
     const generatedSalt = await bcrypt.genSalt();
     const hashedPassword = await bcrypt.hash(
       requestBody.password,
       generatedSalt
     );
-    await User.create({
+    user = await UserRepository.createNewUser({
       name: requestBody.name,
       password: hashedPassword,
       username: requestBody.username,
@@ -64,14 +67,8 @@ const registerUser = async (requestBody: RegisterRequestBody) => {
   };
 
   try {
-    const refreshToken = jwt.sign(
-      publicCredentials,
-      process.env.REFRESH_TOKEN_SECRET!
-    );
-    const accessToken = jwt.sign(
-      publicCredentials,
-      process.env.ACCESS_TOKEN_SECRET!
-    );
+    const refreshToken = await TokensService.generateRefreshToken(publicCredentials, user.id)
+    const accessToken = TokensService.generateAccessToken(publicCredentials)
     const response: RegistrationSuccessResponse = {
       ...publicCredentials,
       accessToken,

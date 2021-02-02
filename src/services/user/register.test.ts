@@ -71,6 +71,6 @@ describe('user registration service tests', () => {
     expect('name' in improperResponse).toBe(true);
     expect('password' in improperResponse).toBe(true);
 
-    expect(improperResponse.name).toMatch('string.empty');
+    expect(improperResponse.name).toBeTruthy()
   });
 });

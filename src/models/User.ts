@@ -1,25 +1,6 @@
 import sequelize from './index';
-import { DataTypes, Model, Optional } from 'sequelize';
-
-// export interface UserModel extends Model<UserModel, UserCreationAttributes> {
-//   id: number,
-//   name: string,
-//   username: string,
-//   password: string
-// }
-
-// interface UserCreationAttributes extends Optional<UserAttributes, "id"> {}
-
-export interface UserAttributes {
-  id: number,
-  name: string,
-  username: string,
-  password: string
-}
-
-interface UserCreationAttributes extends Optional<UserAttributes, 'id'> {};
-
-interface UserInstance extends Model<UserAttributes, UserCreationAttributes>, UserAttributes {}
+import { DataTypes } from 'sequelize';
+import { UserInstance } from '../services/user/usertypes';
 
 const User = sequelize.define<UserInstance>('User', {
   id: {
@@ -27,7 +8,7 @@ const User = sequelize.define<UserInstance>('User', {
     allowNull: false,
     primaryKey: true,
     autoIncrement: true,
-    unique: true
+    unique: true,
   },
   name: {
     type: DataTypes.STRING,
@@ -36,12 +17,12 @@ const User = sequelize.define<UserInstance>('User', {
   username: {
     type: DataTypes.STRING,
     allowNull: false,
-    unique: true
+    unique: true,
   },
   password: {
     type: DataTypes.STRING,
-    allowNull: false
-  }
+    allowNull: false,
+  },
 });
 
 export default User;
