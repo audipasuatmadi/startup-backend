@@ -3,13 +3,13 @@ import {
   RegistrationFailedResponse,
   returnResponseSchema,
   RegistrationSuccessResponse,
-  UserInstance,
 } from './usertypes';
 import bcrypt from 'bcrypt';
 import { validateUserRegisterBody } from './validator';
 import { ValidationError } from 'joi';
 import TokensService from '../tokens'
 import UserRepository from '../../repositories/UserRepository';
+import User from '../../models/User';
 
 const registerUser = async (requestBody: RegisterRequestBody) => {
   try {
@@ -40,7 +40,7 @@ const registerUser = async (requestBody: RegisterRequestBody) => {
     return returnResponseSchema(403, errorFeedback);
   }
 
-  let user: UserInstance
+  let user: User
 
   try {
     const generatedSalt = await bcrypt.genSalt();
@@ -67,7 +67,7 @@ const registerUser = async (requestBody: RegisterRequestBody) => {
   };
 
   try {
-    const refreshToken = await TokensService.generateRefreshToken(publicCredentials, user.id)
+    const refreshToken = await TokensService.generateRefreshToken(publicCredentials, user)
     const accessToken = TokensService.generateAccessToken(publicCredentials)
     const response: RegistrationSuccessResponse = {
       ...publicCredentials,

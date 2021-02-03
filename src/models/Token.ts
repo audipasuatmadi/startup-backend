@@ -1,30 +1,51 @@
+import {
+  Model,
+  DataTypes,
+  HasOneGetAssociationMixin,
+  Association,
+  BelongsToGetAssociationMixin,
+} from 'sequelize';
+import {
+  TokenAttributes,
+  TokenCreationAttributes,
+} from '../services/user/usertypes';
 import sequelize from './index';
-import { DataTypes } from 'sequelize'
-import { TokenInstance } from '../services/user/usertypes';
-import User from '../models/User';
+import User from './User';
 
-const Token = sequelize.define<TokenInstance>('Token', {
-  id: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    primaryKey: true,
-    autoIncrement: true,
-    unique: true,
+class Token
+  extends Model<TokenAttributes, TokenCreationAttributes>
+  implements TokenAttributes {
+  public id!: number;
+  public token!: string;
+  public expiresIn!: Date;
+
+  public readonly createdAt!: Date;
+  public readonly updatedAt!: Date;
+}
+
+Token.init(
+  {
+    id: {
+      type: DataTypes.INTEGER.UNSIGNED,
+      allowNull: false,
+      primaryKey: true,
+      autoIncrement: true,
+      unique: true,
+    },
+    expiresIn: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      field: 'expires_in',
+    },
+    token: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
   },
-  token: {
-    type: DataTypes.STRING,
-    allowNull: false
-  },
-  expiresIn: {
-    type: DataTypes.DATE
-  },
-  userId: {
-    type : DataTypes.INTEGER.UNSIGNED,
-    allowNull: false
+  {
+    sequelize,
+    tableName: 'tokens',
   }
-})
-
-Token.belongsTo(User, {onDelete: 'CASCADE'})
-User.hasOne(Token)
+);
 
 export default Token;

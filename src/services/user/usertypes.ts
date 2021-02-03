@@ -21,7 +21,6 @@ export interface TokenAttributes {
   id: number;
   token: string;
   expiresIn: Date;
-  userId: number;
 }
 
 export interface TokenCreationAttributes extends Optional<TokenAttributes, 'id'> {}
