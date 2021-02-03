@@ -1,8 +1,8 @@
-import { Sequelize } from 'sequelize'
+import { Sequelize } from 'sequelize';
 
 const sequelize = new Sequelize('elites_bible_db', 'root', '', {
   host: 'localhost',
-  dialect: "mysql"
-})
+  dialect: 'mysql',
+});
 
-export default sequelize
+export default sequelize;
