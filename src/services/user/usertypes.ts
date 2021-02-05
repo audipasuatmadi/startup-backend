@@ -1,4 +1,4 @@
-import { Optional, Model } from "sequelize/types";
+import { Optional, Model } from 'sequelize/types';
 
 export interface RegisterRequestBody {
   name: string;
@@ -8,6 +8,11 @@ export interface RegisterRequestBody {
 
 export interface UserCredentials extends RegisterRequestBody {}
 
+export interface LoginCredentials {
+  username: string;
+  password: string;
+}
+
 export interface RegistrationFailedResponse {
   name?: string;
   username?: string;
@@ -15,7 +20,8 @@ export interface RegistrationFailedResponse {
   otherMessage?: string;
 }
 
-export interface UserCreationAttributes extends Optional<UserAttributes, 'id'> {};
+export interface UserCreationAttributes
+  extends Optional<UserAttributes, 'id'> {}
 
 export interface TokenAttributes {
   id: number;
@@ -23,11 +29,16 @@ export interface TokenAttributes {
   expiresIn: Date;
 }
 
-export interface TokenCreationAttributes extends Optional<TokenAttributes, 'id'> {}
+export interface TokenCreationAttributes
+  extends Optional<TokenAttributes, 'id'> {}
 
-export interface TokenInstance extends Model<TokenAttributes, TokenCreationAttributes>, TokenAttributes {}
+export interface TokenInstance
+  extends Model<TokenAttributes, TokenCreationAttributes>,
+    TokenAttributes {}
 
-export interface UserInstance extends Model<UserAttributes, UserCreationAttributes>, UserAttributes {}
+export interface UserInstance
+  extends Model<UserAttributes, UserCreationAttributes>,
+    UserAttributes {}
 
 export interface BaseServiceReturnType<T> {
   status: number;
@@ -45,7 +56,25 @@ export interface RegistrationSuccessResponse {
   refreshToken: string;
 }
 
+export interface LoginSuccessResponse extends RegistrationSuccessResponse {}
+
+export interface LoginFailedResponse {
+  username?: string;
+  password?: string;
+  otherMessage?: string;
+}
+
 export const returnResponseSchema = (
   status: number,
   payload: any
-): BaseServiceReturnType<RegistrationSuccessResponse | RegistrationFailedResponse> => ({ status, payload });
+): BaseServiceReturnType<
+  RegistrationSuccessResponse | RegistrationFailedResponse
+> => ({ status, payload });
+
+export const loginServiceReturnSchema = (
+  status: number,
+  payload: any
+): BaseServiceReturnType<LoginSuccessResponse | LoginFailedResponse> => ({
+  status,
+  payload,
+});
