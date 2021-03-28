@@ -49,6 +49,11 @@ export interface UserAttributes extends RegisterRequestBody {
   id: number;
 }
 
+export interface AuthenticationTokens {
+  accessToken: string;
+  refreshToken: string;
+}
+
 export interface RegistrationSuccessResponse {
   username: string;
   name: string;

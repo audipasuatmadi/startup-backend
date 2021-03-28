@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken'
 import Token from '../../models/Token'
 import User from '../../models/User'
-import { UserInstance } from '../user/usertypes'
+import { UserInstance, AuthenticationTokens } from '../user/usertypes'
 
 export const generateAccessToken = (payload: string | object, expiresIn: string = '60m') => {
   return jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET!, {expiresIn})
@@ -24,12 +24,14 @@ export const generateRefreshToken = async (payload: string | object, User: User)
   return token;
 }
 
+export const getTokenFromBearer = (fullToken: string) => fullToken.split(' ')[1];
+
 export const generateAccessTokenByRefreshToken = () => {
 
 }
 
-export const validateAccessToken = () => {
-
+export const validateAccessToken = ({accessToken}: AuthenticationTokens) => {
+  
 }
 
 const TokensServiceObject = {
