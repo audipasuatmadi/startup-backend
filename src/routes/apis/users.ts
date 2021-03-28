@@ -2,6 +2,7 @@ import express from 'express'
 import registerUser from '../../services/user/register';
 import { RegisterRequestBody, LoginCredentials, AuthenticationTokens } from '../../services/user/usertypes';
 import loginUser from '../../services/user/login';
+import { validateAccessToken } from '../../services/tokens';
 const router = express.Router()
 
 router.post('/', async (req, res) => {
@@ -18,7 +19,9 @@ router.post('/login', async (req, res) => {
 
 router.post('/validate', async(req, res) => {
   const requestBody = req.body as AuthenticationTokens
-  
+  const {accessToken} = requestBody
+  const validation = validateAccessToken(accessToken);
+  res.status(validation!.status).json(validation!.payload);
 })
 
 export default router
