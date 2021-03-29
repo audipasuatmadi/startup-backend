@@ -27,10 +27,11 @@ export interface TokenAttributes {
   id: number;
   token: string;
   expiresIn: Date;
+  userId: number;
 }
 
 export interface TokenCreationAttributes
-  extends Optional<TokenAttributes, 'id'> {}
+  extends Optional<TokenAttributes, "id" & "userId"> {}
 
 export interface TokenInstance
   extends Model<TokenAttributes, TokenCreationAttributes>,
@@ -47,6 +48,11 @@ export interface BaseServiceReturnType<T> {
 
 export interface UserAttributes extends RegisterRequestBody {
   id: number;
+}
+
+export interface AuthenticationTokens {
+  accessToken: string;
+  refreshToken: string;
 }
 
 export interface RegistrationSuccessResponse {

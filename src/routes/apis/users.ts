@@ -1,22 +1,32 @@
-import express from 'express'
+import express from 'express';
 import registerUser from '../../services/user/register';
-import { RegisterRequestBody, LoginCredentials } from '../../services/user/usertypes';
+import {
+  RegisterRequestBody,
+  LoginCredentials,
+  AuthenticationTokens,
+} from '../../services/user/usertypes';
 import loginUser from '../../services/user/login';
-const router = express.Router()
+import { validateAccessToken, getTokenFromBearer, generateAccessToken, generateAccessTokenByRefreshToken } from '../../services/tokens';
+const router = express.Router();
 
 router.post('/', async (req, res) => {
-  const requestBody = req.body as RegisterRequestBody
-  const result = await registerUser(requestBody)
-  res.status(result.status).json(result.payload)
-})
+  const requestBody = req.body as RegisterRequestBody;
+  const result = await registerUser(requestBody);
+  res.status(result.status).json(result.payload);
+});
 
 router.post('/login', async (req, res) => {
-  const requestBody = req.body as LoginCredentials
-  const result = await loginUser(requestBody)
-  console.log('returning result');
-  console.log(result.status)
-  console.log(result.payload)
-  res.status(result.status).json(result.payload)
-})
+  const requestBody = req.body as LoginCredentials;
+  const result = await loginUser(requestBody);
+  res.status(result.status).json(result.payload);
+});
 
-export default router
+router.post('/validate', async (req, res) => {
+  const requestBody = req.body as AuthenticationTokens;
+  const { refreshToken } = requestBody;
+  const userCredentials = await generateAccessTokenByRefreshToken(refreshToken);
+  res.status(userCredentials.status).json(userCredentials.payload);
+
+});
+
+export default router;
