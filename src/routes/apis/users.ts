@@ -23,14 +23,10 @@ router.post('/login', async (req, res) => {
 
 router.post('/validate', async (req, res) => {
   const requestBody = req.body as AuthenticationTokens;
-  const { accessToken, refreshToken } = requestBody;
-  const validation = validateAccessToken(accessToken);
-  if (validation.status != 200) { //TODO: change to !=
-    const newAccessToken = await generateAccessTokenByRefreshToken(refreshToken);
-    res.status(newAccessToken.status).json(newAccessToken.payload);
-  } else {
-    res.status(validation!.status).json(validation!.payload);
-  }
+  const { refreshToken } = requestBody;
+  const userCredentials = await generateAccessTokenByRefreshToken(refreshToken);
+  res.status(userCredentials.status).json(userCredentials.payload);
+
 });
 
 export default router;
