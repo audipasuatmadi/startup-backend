@@ -25,17 +25,16 @@ export const generateRefreshToken = async (payload: string | object, User: User)
 }
 
 // export const getTokenFromBearer = (fullToken: string) => fullToken.split('.')[1];
-export const getTokenFromBearer = (fullToken: string) => fullToken;
+export const getTokenFromBearer = (fullToken: string) => fullToken.split(' ')[1];
 
 export const generateAccessTokenByRefreshToken = () => {
-
+  
 }
 
 export const validateAccessToken = (accessToken: string) => {
-  const token = getTokenFromBearer(accessToken);
-  if (token == null) return loginServiceReturnSchema(403, { otherMessage:'sesi tidak ditemukan' });
+  if (accessToken == null) return loginServiceReturnSchema(403, { otherMessage:'sesi tidak ditemukan' });
   try {
-    const hasil = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET!);
+    const hasil = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET!);
     return loginServiceReturnSchema(200, {otherMessage: 'token valid'});
   } catch (e) {
     return loginServiceReturnSchema(403, { otherMessage:'sesi berakhir' });
