@@ -27,10 +27,11 @@ export interface TokenAttributes {
   id: number;
   token: string;
   expiresIn: Date;
+  userId: number;
 }
 
 export interface TokenCreationAttributes
-  extends Optional<TokenAttributes, 'id'> {}
+  extends Optional<TokenAttributes, "id" & "userId"> {}
 
 export interface TokenInstance
   extends Model<TokenAttributes, TokenCreationAttributes>,

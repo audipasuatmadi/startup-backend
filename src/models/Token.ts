@@ -18,6 +18,7 @@ class Token
   public id!: number;
   public token!: string;
   public expiresIn!: Date;
+  public userId!: number;
 
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
@@ -41,6 +42,10 @@ Token.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
+    userId: {
+      type: DataTypes.INTEGER.UNSIGNED,
+      field: 'user_id'
+    }
   },
   {
     sequelize,
