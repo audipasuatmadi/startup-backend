@@ -6,7 +6,7 @@ import {
   AuthenticationTokens,
 } from '../../services/user/usertypes';
 import loginUser from '../../services/user/login';
-import { validateAccessToken, getTokenFromBearer } from '../../services/tokens';
+import { validateAccessToken, getTokenFromBearer, generateAccessToken, generateAccessTokenByRefreshToken } from '../../services/tokens';
 const router = express.Router();
 
 router.post('/', async (req, res) => {
@@ -23,9 +23,14 @@ router.post('/login', async (req, res) => {
 
 router.post('/validate', async (req, res) => {
   const requestBody = req.body as AuthenticationTokens;
-  const { accessToken } = requestBody;
+  const { accessToken, refreshToken } = requestBody;
   const validation = validateAccessToken(accessToken);
-  res.status(validation!.status).json(validation!.payload);
+  if (validation.status != 200) { //TODO: change to !=
+    const newAccessToken = await generateAccessTokenByRefreshToken(refreshToken);
+    res.status(newAccessToken.status).json(newAccessToken.payload);
+  } else {
+    res.status(validation!.status).json(validation!.payload);
+  }
 });
 
 export default router;
