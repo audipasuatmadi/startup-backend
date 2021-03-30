@@ -3,6 +3,7 @@ import Token from '../../models/Token'
 import User from '../../models/User'
 import { UserInstance, AuthenticationTokens, loginServiceReturnSchema, LoginSuccessResponse } from '../user/usertypes'
 import UserRepository from '../../repositories/UserRepository'
+import TokenRepository from '../../repositories/TokenRepository'
 
 export const generateAccessToken = (payload: string | object, expiresIn: string = '60m') => {
   return jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET!, {expiresIn})
@@ -87,11 +88,17 @@ export const validateAccessToken = (accessToken: string) => {
   }
 }
 
+export const removeTokenByUserId = async (userId: number) => {
+  const result = await TokenRepository.removeTokenByUserId(userId);
+  return result;
+}
+
 const TokensServiceObject = {
   generateAccessToken,
   generateRefreshToken,
   generateAccessTokenByRefreshToken,
-  validateAccessToken
+  validateAccessToken,
+  removeTokenByUserId
 }
 
 export default TokensServiceObject

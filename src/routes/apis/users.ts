@@ -7,6 +7,7 @@ import {
 } from '../../services/user/usertypes';
 import loginUser from '../../services/user/login';
 import { validateAccessToken, getTokenFromBearer, generateAccessToken, generateAccessTokenByRefreshToken } from '../../services/tokens';
+import logoutUser from '../../services/user/logout';
 const router = express.Router();
 
 router.post('/', async (req, res) => {
@@ -28,5 +29,12 @@ router.post('/validate', async (req, res) => {
   res.status(userCredentials.status).json(userCredentials.payload);
 
 });
+
+router.post('/logout', async (req, res) => {
+  const requestBody = req.body as { username: string }
+
+  const removalProcess = await logoutUser(requestBody.username);
+  res.status(removalProcess? 200 : 500);
+})
 
 export default router;
