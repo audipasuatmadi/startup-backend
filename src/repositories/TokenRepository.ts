@@ -11,6 +11,20 @@ const TokenRepository = {
     }
     return token;
   },
+
+  async removeTokenByUserId(userId: number) {
+    let token: Token[] | null;
+    try {
+      token = await Token.findAll({ where: { userId: userId } });
+    } catch (e) {
+      throw e;
+    }
+
+    if (!token) return false;
+
+    token.map((token) => token.destroy());
+    return true;
+  },
 };
 
 export default TokenRepository;

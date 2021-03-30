@@ -7,7 +7,7 @@ import {
 import bcrypt from 'bcrypt';
 import { validateUserRegisterBody } from './validator';
 import { ValidationError } from 'joi';
-import TokensService from '../tokens'
+import TokensService from '../tokens';
 import UserRepository from '../../repositories/UserRepository';
 import User from '../../models/User';
 
@@ -40,7 +40,7 @@ const registerUser = async (requestBody: RegisterRequestBody) => {
     return returnResponseSchema(403, errorFeedback);
   }
 
-  let user: User
+  let user: User;
 
   try {
     const generatedSalt = await bcrypt.genSalt();
@@ -67,8 +67,11 @@ const registerUser = async (requestBody: RegisterRequestBody) => {
   };
 
   try {
-    const refreshToken = await TokensService.generateRefreshToken(publicCredentials, user)
-    const accessToken = TokensService.generateAccessToken(publicCredentials)
+    const refreshToken = await TokensService.generateRefreshToken(
+      publicCredentials,
+      user
+    );
+    const accessToken = TokensService.generateAccessToken(publicCredentials);
     const response: RegistrationSuccessResponse = {
       ...publicCredentials,
       accessToken,

@@ -31,7 +31,7 @@ export interface TokenAttributes {
 }
 
 export interface TokenCreationAttributes
-  extends Optional<TokenAttributes, "id" & "userId"> {}
+  extends Optional<TokenAttributes, 'id' & 'userId'> {}
 
 export interface TokenInstance
   extends Model<TokenAttributes, TokenCreationAttributes>,
