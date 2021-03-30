@@ -13,16 +13,16 @@ const TokenRepository = {
   },
 
   async removeTokenByUserId(userId: number) {
-    let token: Token | null;
+    let token: Token[] | null;
     try {
-      token = await Token.findOne({ where: { userId: userId } });
+      token = await Token.findAll({ where: { userId: userId } });
     } catch (e) {
       throw e;
     }
 
     if (!token) return false;
 
-    token.destroy();
+    token.map((token) => token.destroy());
     return true;
   },
 };
