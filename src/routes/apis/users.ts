@@ -23,8 +23,18 @@ router.post('/', async (req, res) => {
 
 router.post('/login', async (req, res) => {
   const requestBody = req.body as LoginCredentials;
-  const result = await loginUser(requestBody);
-  res.status(result.status).json(result.payload);
+  const {status, payload} = await loginUser(requestBody);
+  if (status === 200 && 'refreshToken' in payload) {
+    const {accessToken, refreshToken, ...otherPayloads} = payload;
+    console.log('sending back')
+    res
+      .status(status)
+      .cookie('rt', payload.refreshToken, {httpOnly: true})
+      .cookie('at', payload.accessToken, {httpOnly: true})
+      .json(otherPayloads)
+  } else {
+    res.status(status).json(payload);
+  }
 });
 
 router.post('/validate', async (req, res) => {
