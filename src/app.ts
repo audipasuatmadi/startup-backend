@@ -5,11 +5,18 @@ import cors from 'cors';
 import UserAPI from './routes/apis/users';
 import bodyParser from 'body-parser';
 import initialize from './models/initializer'
+import cookieParser from 'cookie-parser';
 
 
 const app = express();
 
-app.use(cors(), bodyParser.json());
+app.use(function(req, res, next) {  
+  res.header('Access-Control-Allow-Origin', req.headers.origin);
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});  
+app.use(cors({origin: true, credentials: true}), bodyParser.json());
+app.use(cookieParser(process.env.COOKIE_SECRET));
 app.use('/api/users', UserAPI);
 
 initialize()
