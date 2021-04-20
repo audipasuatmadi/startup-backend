@@ -28,20 +28,21 @@ router.post('/login', async (req, res) => {
     const {accessToken, refreshToken, ...otherPayloads} = payload;
     console.log('sending back')
     res
-      .status(status)
-      .cookie('rt', payload.refreshToken, {httpOnly: true})
-      .cookie('at', payload.accessToken, {httpOnly: true})
-      .json(otherPayloads)
+      .cookie('rt', refreshToken, {httpOnly: true} )
+      .cookie('at', accessToken, {httpOnly: true})
+    res.status(status).json(otherPayloads)
   } else {
     res.status(status).json(payload);
   }
 });
 
 router.post('/validate', async (req, res) => {
-  const requestBody = req.body as AuthenticationTokens;
-  const { refreshToken } = requestBody;
-  const userCredentials = await generateAccessTokenByRefreshToken(refreshToken);
-  res.status(userCredentials.status).json(userCredentials.payload);
+  if (!req.cookies['rt']) {
+    res.status(403);
+  } else {
+    const userCredentials = await generateAccessTokenByRefreshToken(req.cookies['rt']);
+    res.status(userCredentials.status).json(userCredentials.payload);
+  }
 });
 
 router.post('/logout', async (req, res) => {
