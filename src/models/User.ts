@@ -18,6 +18,7 @@ import {
 } from '../services/user/usertypes';
 import sequelize from './index';
 import Token from './Token';
+import Article from './Article';
 
 class User
   extends Model<UserAttributes, UserCreationAttributes>
@@ -33,8 +34,12 @@ class User
   public getToken!: HasOneGetAssociationMixin<Token>;
   public createToken!: HasOneCreateAssociationMixin<Token>;
 
+  public saveArticle!: HasManyCreateAssociationMixin<Article>
+  public getArticles!: HasManyGetAssociationsMixin<Article>
+
   public static associations: {
     token: Association<User, Token>;
+    articles: Association<User, Article>
   };
 }
 
