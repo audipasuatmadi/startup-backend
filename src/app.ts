@@ -3,6 +3,7 @@ import dotenv from 'dotenv'
 dotenv.config()
 import cors from 'cors';
 import UserAPI from './routes/apis/users';
+import ArticlesAPI from './routes/apis/articles';
 import bodyParser from 'body-parser';
 import initialize from './models/initializer'
 import cookieParser from 'cookie-parser';
@@ -26,6 +27,7 @@ app.use(function(req, res, next) {
 app.use(cors({origin: true, credentials: true}), bodyParser.json());
 app.use(cookieParser(process.env.COOKIE_SECRET));
 app.use('/api/users', UserAPI);
+app.use('/api/articles', ArticlesAPI);
 
 initialize()
 export default app;
