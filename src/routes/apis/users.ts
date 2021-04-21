@@ -7,6 +7,7 @@ import {
 import loginUser from '../../services/user/login';
 import { generateAccessTokenByRefreshToken } from '../../services/tokens';
 import logoutUser from '../../services/user/logout';
+import authorize from '../../middlewares/authorization';
 const router = express.Router();
 
 router.post('/', async (req, res) => {
