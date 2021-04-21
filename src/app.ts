@@ -6,11 +6,12 @@ import UserAPI from './routes/apis/users';
 import bodyParser from 'body-parser';
 import initialize from './models/initializer'
 import cookieParser from 'cookie-parser';
+import User from './models/User';
 
 declare global {
   namespace Express {
     interface Request {
-      userData: object | string;
+      userData: User;
     }
   }
 }

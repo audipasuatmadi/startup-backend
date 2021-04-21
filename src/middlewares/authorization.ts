@@ -2,9 +2,19 @@ import { NextFunction, Request, Response } from "express";
 import jwt from 'jsonwebtoken';
 import { generateAccessTokenByRefreshToken } from "../services/tokens";
 import { LoginSuccessResponse } from "../services/user/usertypes";
+import UserRepository from "../repositories/UserRepository";
+
+interface HasUsername {
+  username: string;
+}
 
 const isLoginSuccessResponse = (obj: any): obj is LoginSuccessResponse => {
   if ('accessToken' in obj && 'refreshToken' in obj) return true;
+  return false;
+}
+
+const isHasUsername = (obj: any): obj is HasUsername => {
+  if ('username' in obj) return true;
   return false;
 }
 
@@ -23,8 +33,19 @@ const authorize = async (req: Request<{userData: any}>, res: Response, next: Nex
     };
     
     if (atVerifyStatus !== false) {
-      req.userData = atVerifyStatus;
-      next();
+      if (isHasUsername(atVerifyStatus)) {
+        const user = await UserRepository.getUserByUsername(atVerifyStatus.username)
+        if (user !== null) {
+          req.userData = user;
+          next();
+        } else {
+          console.log(1)
+          res.status(403).end();
+        }
+      } else {
+        console.log(2)
+        res.status(403).end();
+      }
     } else {
       let newAccessToken: string | object | boolean;
       try {
@@ -37,19 +58,30 @@ const authorize = async (req: Request<{userData: any}>, res: Response, next: Nex
       }
 
       if (newAccessToken === false) {
+        console.log(3)
         res.cookie('at', '', {maxAge: 0});
         res.cookie('rt', '', {maxAge: 0});
         res.status(403).end();
       }
 
       if (isLoginSuccessResponse(newAccessToken)) {
-        const {username, name} = newAccessToken
+        const {username} = newAccessToken
         res.cookie('at', newAccessToken.accessToken);
-        req.userData = {username: username, name: name};
-        next();
+        const user = await UserRepository.getUserByUsername(username);
+        if (user !== null) {
+          req.userData = user;
+          next();
+        } else {
+          console.log(4)
+          res.status(403).end();
+        }
+      } else {
+        console.log(5)
+        res.status(403).end();
       }
     }
   } else {
+    console.log(6)
     res.status(403).end();
   }
 }
