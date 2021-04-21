@@ -12,6 +12,19 @@ const ArticleService = {
     }
     return createArticleFeedback;
   },
+  
+  loadAnArticle: async (articleId: number) => {
+    const response = await ArticleRepository.loadAnArticle(articleId);
+    if (response === null) return false;
+    return response;
+  },
+
+  loadArticlesByUser: async (userId: number) => {
+    const response = await ArticleRepository.loadArticlesByUser(userId);
+    if (response === null) return false;
+    return response;
+  }
+  
 };
 
 export default ArticleService;
