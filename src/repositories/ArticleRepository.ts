@@ -17,6 +17,26 @@ const ArticleRepository = {
     }
     return article;
   },
+
+  async loadAnArticle(articleId: number) {
+    let article: Article | null;
+    try {
+      article = await Article.findOne({ where: { id: articleId } });
+    } catch (e) {
+      article = null;
+    }
+    return article;
+  },
+
+  async loadArticlesByUser(writerId: number) {
+    let article: Article[] | null;
+    try {
+      article = await Article.findAll({ where: { writerId: writerId } });
+    } catch (e) {
+      article = null;
+    }
+    return article;
+  },
 };
 
 export default ArticleRepository;
