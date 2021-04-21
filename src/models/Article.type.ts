@@ -1,8 +1,8 @@
 import { Optional } from "sequelize/types";
 
 export interface ArticleAttribute {
-  id: number;
-  writerId: number;
+  id?: number;
+  writerId?: number;
   content: string;
 }
 
