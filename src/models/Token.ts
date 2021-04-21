@@ -1,16 +1,12 @@
 import {
   Model,
   DataTypes,
-  HasOneGetAssociationMixin,
-  Association,
-  BelongsToGetAssociationMixin,
 } from 'sequelize';
 import {
   TokenAttributes,
   TokenCreationAttributes,
 } from '../services/user/usertypes';
 import sequelize from './index';
-import User from './User';
 
 class Token
   extends Model<TokenAttributes, TokenCreationAttributes>
