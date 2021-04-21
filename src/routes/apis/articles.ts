@@ -23,4 +23,20 @@ router.post('/', authorize, async (req, res) => {
   }
 });
 
+router.get('/:articleId', async (req, res) => {
+  const articleId = parseInt(req.params['articleId']);
+  if (isNaN(articleId)) {
+    res.status(422).send('articleid must be a number');
+    return;
+  }
+  const article = await ArticleService.loadAnArticle(articleId);
+
+  if (article === false) {
+    res.status(404).send('article not found');
+  } else {
+    res.status(200).json({content: article});
+  }
+
+})
+
 export default router;
