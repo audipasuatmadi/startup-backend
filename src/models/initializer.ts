@@ -2,7 +2,6 @@ import User from './User';
 import Token from './Token';
 import Article from './Article';
 
-//TODO: foreign key
 const initialize = async () => {
   try {
     User.hasOne(Token, {

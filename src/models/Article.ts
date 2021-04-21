@@ -1,8 +1,10 @@
 import sequelize from './index';
-import { Model, DataTypes } from 'sequelize/types';
+import { Model, DataTypes } from 'sequelize';
 import { ArticleAttribute, ArticleCreaionAttribute } from './Article.type';
 
-class Article extends Model<ArticleAttribute, ArticleCreaionAttribute> implements ArticleAttribute {
+class Article
+  extends Model<ArticleAttribute, ArticleCreaionAttribute>
+  implements ArticleAttribute {
   public id!: number;
   public writerId!: number;
   public content!: string;
@@ -18,7 +20,7 @@ Article.init(
       allowNull: false,
       primaryKey: true,
       autoIncrement: true,
-      unique: true
+      unique: true,
     },
     content: {
       type: DataTypes.TEXT,
@@ -26,12 +28,12 @@ Article.init(
     writerId: {
       type: DataTypes.INTEGER.UNSIGNED,
       field: 'writer_id',
-    }
+    },
   },
   {
     sequelize,
-    tableName: 'articles'
+    tableName: 'articles',
   }
-)
+);
 
 export default Article;
