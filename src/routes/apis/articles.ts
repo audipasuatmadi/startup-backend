@@ -23,20 +23,38 @@ router.post('/', authorize, async (req, res) => {
   }
 });
 
-router.get('/:articleId', async (req, res) => {
+router.get('/:articleId', async (req, res, next) => {
   const articleId = parseInt(req.params['articleId']);
   if (isNaN(articleId)) {
-    res.status(422).send('articleid must be a number');
+    res.status(422);
+    next(new Error('article params must be a number'));
     return;
   }
   const article = await ArticleService.loadAnArticle(articleId);
 
   if (article === false) {
-    res.status(404).send('article not found');
+    res.status(404);
+    next(new Error('something is wrong in fetching article'));
   } else {
     res.status(200).json({content: article});
   }
 
+})
+
+router.get('/u/:userId', async (req, res, next) => {
+  const userId = parseInt(req.params['userId']);
+  if (isNaN(userId)) {
+    res.status(422);
+    next(new Error('invalid parameters'));
+  }
+
+  const articles = await ArticleService.loadArticlesByUser(userId)
+  if (articles === false) {
+    res.status(404);
+    next(new Error('something is wrong in finding articles'));
+  } else {
+    res.status(200).json({contents: articles});
+  }
 })
 
 export default router;
