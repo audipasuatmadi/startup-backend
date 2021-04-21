@@ -1,4 +1,4 @@
-import { Optional } from "sequelize/types";
+import { Optional } from 'sequelize/types';
 
 export interface ArticleAttribute {
   id?: number;
@@ -6,4 +6,5 @@ export interface ArticleAttribute {
   content: string;
 }
 
-export interface ArticleCreaionAttribute extends Optional<ArticleAttribute, 'id' & 'writerId'> {}
+export interface ArticleCreaionAttribute
+  extends Optional<ArticleAttribute, 'id' & 'writerId'> {}
