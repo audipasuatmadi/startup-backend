@@ -7,6 +7,13 @@ import bodyParser from 'body-parser';
 import initialize from './models/initializer'
 import cookieParser from 'cookie-parser';
 
+declare global {
+  namespace Express {
+    interface Request {
+      userData: object | string;
+    }
+  }
+}
 
 const app = express();
 
