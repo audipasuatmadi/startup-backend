@@ -31,16 +31,18 @@ const loginUser = async (credentials: LoginCredentials) => {
   }
 
   try {
-    const { username, name } = userModel;
+    const { username, name, id } = userModel;
     const refreshToken = await TokenService.generateRefreshToken(
-      { username, name },
+      { id, username, name },
       userModel
     );
     const accessToken = await TokenService.generateAccessToken({
+      id,
       username,
       name,
     });
     const response: LoginSuccessResponse = {
+      id,
       username,
       name,
       accessToken,

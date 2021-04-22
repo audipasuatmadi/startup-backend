@@ -61,9 +61,12 @@ const registerUser = async (requestBody: RegisterRequestBody) => {
     return returnResponseSchema(500, errorFeedback);
   }
 
+  const {id, username, name} = user;
+
   const publicCredentials = {
-    username: requestBody.username,
-    name: requestBody.name,
+    id: id,
+    username: username,
+    name: name
   };
 
   try {
@@ -73,7 +76,9 @@ const registerUser = async (requestBody: RegisterRequestBody) => {
     );
     const accessToken = TokensService.generateAccessToken(publicCredentials);
     const response: RegistrationSuccessResponse = {
-      ...publicCredentials,
+      id,
+      username,
+      name,
       accessToken,
       refreshToken,
     };
