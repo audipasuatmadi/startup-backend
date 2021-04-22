@@ -56,6 +56,7 @@ export interface AuthenticationTokens {
 }
 
 export interface RegistrationSuccessResponse {
+  id?: number
   username: string;
   name: string;
   accessToken: string;
