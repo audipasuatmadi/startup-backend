@@ -5,12 +5,13 @@ const router = express.Router();
 
 router.post('/', authorize, async (req, res) => {
   const content = req.body.content;
-  if (content === null) {
-    res.status(422).send('content is null');
+  const title = req.body.title;
+  if (content === null || title === null) {
+    res.status(422).send('content or title is null');
   } else {
     let feedback;
     try {
-      feedback = await ArticleService.newArticle(req.userData, content);
+      feedback = await ArticleService.newArticle(req.userData, content, title);
     } catch (e) {
       feedback = false;
     }
@@ -36,10 +37,9 @@ router.get('/:articleId', async (req, res, next) => {
     res.status(404);
     next(new Error('something is wrong in fetching article'));
   } else {
-    res.status(200).json({content: article});
+    res.status(200).json({ content: article });
   }
-
-})
+});
 
 router.get('/u/:userId', async (req, res, next) => {
   const userId = parseInt(req.params['userId']);
@@ -48,13 +48,13 @@ router.get('/u/:userId', async (req, res, next) => {
     next(new Error('invalid parameters'));
   }
 
-  const articles = await ArticleService.loadArticlesByUser(userId)
+  const articles = await ArticleService.loadArticlesByUser(userId);
   if (articles === false) {
     res.status(404);
     next(new Error('something is wrong in finding articles'));
   } else {
-    res.status(200).json({contents: articles});
+    res.status(200).json({ contents: articles });
   }
-})
+});
 
 export default router;

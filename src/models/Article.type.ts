@@ -4,6 +4,7 @@ export interface ArticleAttribute {
   id?: number;
   writerId?: number;
   content: string;
+  title: string;
 }
 
 export interface ArticleCreaionAttribute
