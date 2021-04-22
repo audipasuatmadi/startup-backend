@@ -5,8 +5,8 @@ const router = express.Router();
 
 router.post('/', authorize, async (req, res) => {
   const content = req.body.content;
-  const title = req.body.title;
-  if (content === null || title === null) {
+  const title: string = req.body.title;
+  if (content === null || title === null || (title.trim() === '')) {
     res.status(422).send('content or title is null');
   } else {
     let feedback;
