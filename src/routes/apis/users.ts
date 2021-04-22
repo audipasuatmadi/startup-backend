@@ -12,8 +12,16 @@ const router = express.Router();
 
 router.post('/', async (req, res) => {
   const requestBody = req.body as RegisterRequestBody;
-  const result = await registerUser(requestBody);
-  res.status(result.status).json(result.payload);
+  const {status, payload} = await registerUser(requestBody);
+  if (status === 201 && 'refreshToken' in payload) {
+    const { accessToken, refreshToken, ...otherPayloads } = payload;
+    res
+      .cookie('rt', refreshToken, { httpOnly: true })
+      .cookie('at', accessToken, { httpOnly: true });
+    res.status(status).json(otherPayloads);
+  } else {
+    res.status(status).json(payload);
+  }
 });
 
 router.post('/login', async (req, res) => {
@@ -21,7 +29,6 @@ router.post('/login', async (req, res) => {
   const { status, payload } = await loginUser(requestBody);
   if (status === 200 && 'refreshToken' in payload) {
     const { accessToken, refreshToken, ...otherPayloads } = payload;
-    console.log('sending back');
     res
       .cookie('rt', refreshToken, { httpOnly: true })
       .cookie('at', accessToken, { httpOnly: true });
