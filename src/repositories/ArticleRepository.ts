@@ -2,12 +2,13 @@ import User from '../models/User';
 import Article from '../models/Article';
 
 const ArticleRepository = {
-  async createNewArticle(user: User, articleContent: string) {
+  async createNewArticle(user: User, articleContent: string, title: string) {
     let article: Article | null;
     try {
       article = await Article.create({
         content: articleContent,
         writerId: user.id,
+        title: title,
       });
       if (!article) {
         throw new Error('something is wrong in creating new article');
