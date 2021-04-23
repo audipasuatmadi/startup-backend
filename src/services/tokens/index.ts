@@ -79,13 +79,15 @@ export const generateAccessTokenByRefreshToken = async (
     });
 
   try {
-    const { username, name } = userInstance;
+    const { id, username, name } = userInstance;
 
     const accessToken = generateAccessToken({
+      id,
       username,
       name,
     });
     const response: LoginSuccessResponse = {
+      id,
       username,
       name,
       accessToken,
