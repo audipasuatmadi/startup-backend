@@ -12,7 +12,7 @@ const router = express.Router();
 
 router.post('/', async (req, res) => {
   const requestBody = req.body as RegisterRequestBody;
-  const {status, payload} = await registerUser(requestBody);
+  const { status, payload } = await registerUser(requestBody);
   if (status === 201 && 'refreshToken' in payload) {
     const { accessToken, refreshToken, ...otherPayloads } = payload;
     res
@@ -42,10 +42,18 @@ router.post('/validate', async (req, res) => {
   if (!req.cookies['rt']) {
     res.status(403).end();
   } else {
-    const userCredentials = await generateAccessTokenByRefreshToken(
+    const { status, payload } = await generateAccessTokenByRefreshToken(
       req.cookies['rt']
     );
-    res.status(userCredentials.status).json(userCredentials.payload);
+    if (status === 200 && 'accessToken' in payload) {
+      const { accessToken, refreshToken, ...otherPayload } = payload;
+      res.cookie('at', accessToken, { httpOnly: true });
+      res.status(status).json(otherPayload);
+    } else {
+      res.cookie('at', '', { maxAge: 0 });
+      res.cookie('rt', '', { maxAge: 0 });
+      res.status(status).send(payload);
+    }
   }
 });
 
