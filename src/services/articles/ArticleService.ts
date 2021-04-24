@@ -19,8 +19,13 @@ const ArticleService = {
     if (article === null) return false;
     const writer = await UserRepository.getUserById(article.writerId);
     if (writer === null) return false;
+    const {id, title, content, createdAt, updatedAt} = article;
     const response = {
-      ...article,
+      id,
+      title,
+      content,
+      createdAt,
+      updatedAt,
       writerData: {
         id: writer.id,
         username: writer.username,
