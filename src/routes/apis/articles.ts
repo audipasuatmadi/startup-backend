@@ -37,7 +37,7 @@ router.get('/:articleId', async (req, res, next) => {
     res.status(404);
     next(new Error('something is wrong in fetching article'));
   } else {
-    res.status(200).json({ content: article });
+    res.status(200).json(article);
   }
 });
 
