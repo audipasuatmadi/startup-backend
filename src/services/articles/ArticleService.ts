@@ -1,5 +1,6 @@
 import User from '../../models/User';
 import ArticleRepository from '../../repositories/ArticleRepository';
+import UserRepository from '../../repositories/UserRepository';
 
 const ArticleService = {
   newArticle: async (user: User, contents: string, title: string) => {
@@ -14,8 +15,18 @@ const ArticleService = {
   },
 
   loadAnArticle: async (articleId: number) => {
-    const response = await ArticleRepository.loadAnArticle(articleId);
-    if (response === null) return false;
+    const article = await ArticleRepository.loadAnArticle(articleId);
+    if (article === null) return false;
+    const writer = await UserRepository.getUserById(article.writerId);
+    if (writer === null) return false;
+    const response = {
+      ...article,
+      writerData: {
+        id: writer.id,
+        username: writer.username,
+        name: writer.name
+      }
+    }
     return response;
   },
 
